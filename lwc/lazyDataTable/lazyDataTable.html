@@ -1,0 +1,164 @@
+<!--
+ - Created by Artem Koverchik on 2/6/2020.
+ -->
+
+<!-- Lazy Data Table -->
+<template>
+    <template if:false={loaded}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+    <lightning-card title="Lazy Data Table" icon-name="action:record">
+        <div>
+            <template if:true={isReadAccept}>
+                <div class="slds-m-bottom_medium buttons">
+                    <div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">
+                                <span class="">Select Page Size</span>
+                            </label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <label>
+                                        <select class="slds-select" onchange={getRecords}>
+                                            <template for:each={pageSizes} for:item="item">
+                                                <option key={item.id} class="uiInputSelectOption" value={item.value}>
+                                                    {item.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="controlButtons">
+                        <lightning-button-group class="">
+                            <lightning-button label={nameObject} disabled={isCreateAccept} onclick={showPopUp}>
+                            </lightning-button>
+                        </lightning-button-group>
+                    </div>
+                </div>
+
+            </template>
+
+        </div>
+
+        <template if:true={loaded}>
+
+            <template if:false={isReadable}>
+                <div class="slds-align_absolute-center">
+                    Sorry, you don't have such permissions!
+                </div>
+            </template>
+
+            <template if:true={createRecordPopUp}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container modal">
+                        <header class="slds-modal__header">
+
+                            <h2 id="modal-heading-011" class="slds-modal__title slds-hyphenate">Create Record</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-11">
+                            <lightning-record-form
+                                    object-api-name={objectName}
+                                    layout-type="Full"
+                                    columns="2"
+                                    onsuccess={handleSuccess}
+                                    onerror={handleError}
+                            >
+                            </lightning-record-form>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_neutral" onclick={hidePopUp}>Close</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <template if:true={updateRecordPopUp}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container modal">
+                        <header class="slds-modal__header">
+
+                            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Update Record</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning-record-form
+                                    record-id={recordToUpdate.Id}
+                                    object-api-name={objectName}
+                                    layout-type="Full"
+                                    columns="2"
+                                    mode="edit"
+                                    onsubmit={handleSubmit}
+                                    onerror={handleError}
+                            >
+                            </lightning-record-form>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_neutral" onclick={hideUpdatePopUp}>Close</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <template if:true={isDataExist}>
+                <lightning-datatable key-field="id"
+                                     class="slds-m-top_large"
+                                     data={data}
+                                     columns={columns}
+                                     row-number-offset={rowOffset}
+                                     show-row-number-column="true"
+                                     hide-checkbox-column="true"
+                                     onrowaction={callRowAction}
+                >
+                </lightning-datatable>
+
+                <template if:true={isTotalPagesMoreThenOne}>
+                    <div class="foot">
+                        <div class="slds-align_absolute-center">
+                            <div class="slds-m-top_medium">
+                                <lightning-button icon-name="utility:chevronleft"
+                                                  onclick={onPrev}
+                                                  disabled={isCurrentPageNumberFirst}></lightning-button>
+                                <span class="slds-p-horizontal_x-small">
+                                    <a class="currentPage" onclick={onFirst} name="1">1</a>
+                                </span>
+
+                                <template if:true={isCurrentPageMoreThenFour}>
+                                    <span class="slds-p-horizontal_xxx-small">
+                                        <a>...</a>
+                                    </span>
+                                </template>
+
+                                <template for:each={pageList} for:item="item" for:index="index">
+                                    <span class="slds-p-horizontal_x-small" key={item}>
+                                        <a onclick={processMe} name={item} about={index}>{item}</a>
+                                    </span>
+                                </template>
+
+                                <template if:true={isCurrentPageLessThenTotalPages}>
+                                    <span class="slds-p-horizontal_xxx-small">
+                                        <a>...</a>
+                                    </span>
+                                </template>
+                                <span class="slds-p-horizontal_x-small">
+                                    <a onclick={onLast} name={totalPages}>{totalPages}</a>
+                                </span>
+                                <lightning-button icon-name="utility:chevronright" icon-position="right"
+                                                  disabled={isCurrentPageNumberLast}
+                                                  onclick={onNext}></lightning-button>
+                            </div>
+                        </div>
+
+                    </div>
+                </template>
+            </template>
+        </template>
+    </lightning-card>
+
+</template>
+
+

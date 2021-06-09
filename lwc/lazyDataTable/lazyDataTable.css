@@ -1,0 +1,46 @@
+/**
+ * Created by Artem Koverchik on 2/7/2020.
+ */
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 10px 6px;
+}
+
+.controlButtons {
+    margin-top: 21px;
+}
+
+.getDataButtons {
+    margin-left: 7rem;
+}
+
+.spin {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+}
+
+.currentPage {
+    color: orange;
+}
+
+.foot {
+    display: flex;
+}
+
+.dropDown {
+    width: 100px;
+    margin-left: 1rem;
+}
+
+.slds-dropdown {
+    width: 100px;
+    max-width: 100px;
+}
+
+.modal {
+    max-width: 65rem;
+    width: 65rem;
+}

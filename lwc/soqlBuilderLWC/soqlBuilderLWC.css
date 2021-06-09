@@ -1,0 +1,64 @@
+/**
+ * Created by Artem Koverchik on 1/27/2020.
+ */
+
+.conditionsInputs {
+    width: 150px;
+    max-width: 150px;
+}
+
+.selected {
+    color:orange;
+}
+
+.but {
+    margin-right: 25px;
+}
+
+.conditionsDelete {
+    width: 250px;
+}
+
+.controlButtons {
+    display: flex;
+    justify-content: center;
+}
+
+.rightButton {
+    margin-left: 1rem;
+}
+
+.emptyTag {
+    max-width: 160px;
+}
+
+.logicOperators {
+    width: 80px;
+}
+
+.deleteIcon {
+    margin: 22px;
+}
+
+.deleteIcon:hover {
+    margin: 21px;
+    border: 1px solid;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(78, 196, 242, 0.5);
+}
+
+.addIcon {
+    float: right;
+    margin-right: 20px;
+}
+
+.addIcon:hover {
+    margin-right: 19px;
+    border: 1px solid;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(78, 196, 242, 0.5);
+}
+
+.lastColumnCondition {
+    display: flex;
+}

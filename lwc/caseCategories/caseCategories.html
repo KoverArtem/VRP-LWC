@@ -1,0 +1,77 @@
+<!--
+ - Created by Artem Koverchik on 2/17/2020.
+ -->
+
+<!-- Case Categories -->
+<template>
+
+    <div class="slds-grid tab">
+
+
+
+        <div class="slds-col slds-size_1-of-3">
+
+            <lightning-combobox
+                    label="Status"
+                    value={selectedCategory}
+                    placeholder="Select Category"
+                    options={categoryOptions}
+                    onchange={changeCategoryHandle}
+            >
+            </lightning-combobox>
+
+        </div>
+
+        <div class="slds-col slds-size_1-of-3 slds-m-left_medium">
+            <template if:true={isCategorySelected}>
+
+                <div class="list">
+                    <div>
+                        Select Subcategories:
+                    </div>
+                    <div class="list-items">
+                    <template for:each={subcategoriesOptions} for:item="subcategory">
+                        <div key={subcategory.label} class="list-content">
+                            <lightning-input type="checkbox" label={subcategory.label} checked={subcategory.checked}
+                                             onchange={changeSubcategoryHandle}
+                            >
+                            </lightning-input>
+                        </div>
+                    </template>
+                    </div>
+                </div>
+
+            </template>
+        </div>
+
+        <div class="slds-col slds-size_1-of-3 subcategories">
+
+            <template if:true={categoriesValues.length}>
+                <h2>Selected Subcategories:</h2>
+
+                <ul class="slds-has-dividers_bottom slds-has-block-links_space">
+                    <template for:each={categoriesValues} for:item="subcategory">
+
+                        <li key={subcategory} class="slds-item value-item">
+                            <lightning-icon icon-name="utility:close" size="xx-small"  class="value-item-icon"
+                                            title={subcategory.label} onclick={deleteCategories}
+                            >
+                            </lightning-icon>
+                            <a href="javascript:void(0);">{subcategory.label}</a>
+                        </li>
+
+                    </template>
+                </ul>
+                <div class="subcategories-button slds-align_absolute-center">
+                    <lightning-button label="Save" onclick={saveCategories}></lightning-button>
+                </div>
+            </template>
+
+        </div>
+
+    </div>
+
+
+
+
+</template>

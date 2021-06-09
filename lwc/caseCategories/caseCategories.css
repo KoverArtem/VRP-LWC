@@ -1,0 +1,41 @@
+/**
+ * Created by Artem Koverchik on 2/17/2020.
+ */
+
+.tab {
+    height: 300px;
+}
+
+.list {
+    margin-top: 5px;
+    margin-left: 50px;
+}
+
+.list-items {
+    margin-left: 7px;
+}
+
+.list-content {
+    margin-bottom: 3px;
+}
+
+.subcategories {
+    max-width: 150px;
+    margin-top: 7px;
+}
+
+.value-item {
+    display: flex;
+}
+
+.value-item-icon {
+    margin-top: 9px;
+}
+
+.value-item-icon:hover {
+    cursor: pointer;
+}
+
+.subcategories-button {
+    margin-top: 20px;
+}

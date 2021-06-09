@@ -1,0 +1,115 @@
+<!--
+ - Created by Artem Koverchik on 2/25/2020.
+ -->
+
+<!-- Object Manager -->
+<template>
+
+    <lightning-card title="">
+        <div class="slds-grid">
+
+            <div class="slds-col slds-size_1-of-3 slds-border_right">
+                <div class="column-header slds-border_bottom slds-align_absolute-center">
+                    <p>New Data</p>
+                </div>
+                <div class="slds-m-around_medium">
+                    <template if:true={isCards}>
+                        <div class="slds-m-top_medium slds-box scrollbar cards">
+                            <template for:each={cards} for:item="card" for:index="index">
+                                <div key={card} id={index} class={card.class} draggable={card.notDisabled}
+                                     title={card.caseId} ondragstart={handleDragStart}
+                                >
+                                    <div class="card-icon">
+                                        <lightning-icon icon-name="utility:close" size="x-small" title={index} onclick={deleteCard}>
+                                        </lightning-icon>
+                                    </div>
+                                    <div>
+                                        <template for:each={card.stringValue} for:item="option">
+                                            <div key={option}>
+                                                {option}<br/>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={isCards}>
+                        <div class="slds-align_absolute-center">
+                            <p>No Data</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_1-of-3 slds-border_right" ondragover={handleDragOver} ondrop={handleDrop}>
+                <div class="column-header slds-border_bottom slds-align_absolute-center">
+                    <p>Handling Center</p>
+                </div>
+                <div class="slds-m-around_medium ">
+                    <template if:false={loaded}>
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                    </template>
+                    <template if:true={loaded}>
+                        <template if:true={isSelectedCase}>
+                            <div class="fields scrollbar slds-box">
+                                <template for:each={objects} for:item="object" for:index="index">
+                                    <div key={object.label} class="field-item slds-border_bottom">
+                                        <!--<pre><lightning-button label={field.label} value={index} onclick={handleFieldClick}></lightning-button>    :  {field.value}</pre>-->
+                                        <div>
+                                            <lightning-button label={object.label} value={index} onclick={handleObjectClick}></lightning-button>
+                                        </div>
+                                        <div class="field-item-percentage">
+                                            {object.value}
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <template if:true={isMappingFields}>
+                                <div class="fields scrollbar slds-m-top_medium slds-box">
+                                    <template for:each={mappingFields} for:item="field">
+                                        <div key={field.label} class="field">
+                                            <lightning-input label={field.label} value={field.value}
+                                                             checked={field.value} type={field.type}
+                                                             onchange={handleChangeInput}>
+                                            </lightning-input>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="slds-m-top_medium slds-align_absolute-center">
+                                    <lightning-button label="Create Record" onclick={saveRecord}></lightning-button>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:false={isSelectedCase}>
+                            <div class="slds-align_absolute-center">
+                                <p>+-------------Drop Column-------------+</p>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+
+
+            <div class="slds-col slds-size_1-of-3">
+                <div class="column-header slds-border_bottom slds-align_absolute-center">
+                    <p>Created Data</p>
+                </div>
+                <template if:true={createdDataLength}>
+                    <lightning-button label="Refresh"></lightning-button>
+                    <div class="slds-m-around_medium slds-box scrollbar createdData">
+                        <template for:each={createdData} for:item="card">
+                            <div key={card.id} class="slds-box slds-m-bottom_small">
+                                <p>New {card.apiName} : Id - {card.id}</p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+
+    </lightning-card>
+
+
+</template>

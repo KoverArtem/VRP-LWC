@@ -1,0 +1,246 @@
+<!--
+ - Created by Artem Koverchik on 1/27/2020.
+ -->
+
+<!-- Soql Builder Lwc -->
+<template>
+    <lightning-card title="SOQL Builder" icon-name="action:apex">
+
+        <template if:true={loaded}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <div class="slds-m-around_small soqlArea">
+            <lightning-textarea label="SOQL Request String" value={soqlString}></lightning-textarea>
+        </div>
+
+        <div class="slds-m-around_small">
+
+            <!-- SELECT Object-->
+            <div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label">
+                        <span class="">Select Object</span>
+                    </label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <label>
+                                <select class="slds-select" onchange={selectionChangeHandler}>
+                                    <option value="Select">Select Object</option>
+                                    <template for:each={objects} for:item="object">
+                                        <option key={object} class="uiInputSelectOption" value={object}>{object}
+                                        </option>
+                                    </template>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template if:true={selectedObjectName}>
+                <!-- SELECT Fields-->
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-dual-listbox id="selectOptions"
+                                                class="dualListBox"
+                                                name="Select Options"
+                                                label="Select Fields"
+                                                source-label="Available Fields"
+                                                selected-label="Selected Fields"
+                                                options={objectFields}
+                                                value={selectedObjectFields}
+                                                onchange={addSelectedFields}
+                        >
+                        </lightning-dual-listbox>
+                    </div>
+
+                    <!-- Conditions -->
+                    <div class="slds-col slds-size_1-of-2 slds-m-top_large">
+
+
+                        <template if:true={selectedObjectFields.length}>
+
+
+
+                            <template for:each={conditions} for:item="condition" for:index="index">
+                                <div class="slds-grid" key={condition.index}>
+                                    <div class="slds-col slds-size_1-of-8">
+
+
+                                        <div class="slds-form-element logicOperators">
+                                            <label class="slds-form-element__label">
+                                                <span class="">{logicalOperatorsLabel}</span>
+                                            </label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-select_container">
+                                                    <label>
+                                                        <select class="slds-select selectedCondition"
+                                                                onchange={changeLogicalOperatorHandle} name={index}>
+                                                            <template for:each={logicalOperators} for:item="operator">
+                                                                <option class="uiInputSelectOption" key={operator.value}
+                                                                        value={operator.value}
+                                                                >
+                                                                    {operator.value}
+                                                                </option>
+                                                            </template>
+                                                        </select>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_7-of-8">
+
+                                        <div class="slds-grid">
+                                            <div class="slds-col">
+                                                <div class="conditionsInputs">
+                                                    <div class="slds-form-element">
+                                                        <label class="slds-form-element__label">
+                                                            <span class="">{fieldsLabel}</span>
+                                                        </label>
+                                                        <div class="slds-form-element__control">
+                                                            <div class="slds-select_container">
+                                                                <label>
+                                                                    <select class="slds-select conditionsInputs"
+                                                                            onchange={changeFieldConditionsHandle}
+                                                                            name={index}>
+                                                                        <option value="Select">Select Field</option>
+                                                                        <template for:each={objectFields} for:item="field">
+                                                                            <option key={field.value}
+                                                                                    class="uiInputSelectOption"
+                                                                                    value={field.value}>
+                                                                                {field.value}
+                                                                            </option>
+                                                                        </template>
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="slds-col">
+                                                <div class="conditionsInputs">
+                                                    <div class="slds-form-element">
+                                                        <label class="slds-form-element__label">
+                                                            <span class="">{compareOperatorsLabel}</span>
+                                                        </label>
+                                                        <div class="slds-form-element__control">
+                                                            <div class="slds-select_container">
+                                                                <label>
+                                                                    <select class="slds-select" name={index}
+                                                                            onchange={changeComparisonOperatorHandle}>
+                                                                        <option value="Select">Select Operator</option>
+                                                                        <template for:each={comparisonOperators}
+                                                                                  for:item="operator">
+                                                                            <option key={operator} class="uiInputSelectOption"
+                                                                                    value={operator}>
+                                                                                {operator}
+                                                                            </option>
+                                                                        </template>
+                                                                    </select>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="slds-col lastColumnCondition">
+                                                <div class="conditionsInputs">
+                                                    <lightning-input label={compareValueLabel} value={condition.value}
+                                                                     onchange={changeCompareValueHandle} name={index}
+                                                    >
+                                                    </lightning-input>
+                                                </div>
+
+                                                <div class="deleteIcon" index={index}>
+                                                    <lightning-icon icon-name="utility:close" size="small"
+                                                                    onclick={deleteCondition} id={index}
+                                                    >
+                                                    </lightning-icon>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </template>
+                            <lightning-icon class="addIcon" icon-name="utility:add" size="small" onclick={addCondition}>
+                            </lightning-icon>
+                            <template if:true={isConditionsLengthMoreThenTwo}>
+                                <div class="slds-m-top_medium">
+
+                                    <lightning-input label="Put Parentheses" value={conditionsString}
+                                                     onchange={changeConditionsString}>
+                                    </lightning-input>
+
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Buttons -->
+        <div class="slds-align_absolute-center">
+            <div>
+                <lightning-button label="Get Data" onclick={getData}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+    <div>
+        <template if:true={isAllDataExist}>
+            <lightning-datatable
+                    key-field="id"
+                    hide-checkbox-column=true
+                    show-row-number-column="true"
+                    row-number-offset={rowOffset}
+                    data={data}
+                    columns={columns}
+                    onsort={updateColumnSorting}
+                    sorted-by={fieldNameToSort}
+                    sorted-direction={sortDirection}
+            >
+            </lightning-datatable>
+            <template if:true={isTotalPagesMoreThenOne}>
+                <div class="slds-align_absolute-center">
+                    <lightning-button label="First" icon-name="utility:left"
+                                      onclick={onFirst} disabled={isCurrentPageNumberFirst}></lightning-button>
+                    <lightning-button icon-name="utility:chevronleft"
+                                      onclick={onPrev} disabled={isCurrentPageNumberFirst}></lightning-button>
+                    <span class="slds-p-horizontal_x-small">
+                            <a onclick={processMe} name="1">1</a>
+                        </span>
+                    <span class="slds-p-horizontal_xxx-small">
+                            <a>...</a>
+                        </span>
+
+                    <template for:each={pageList} for:item="item">
+                        <option key={item} class="uiInputSelectOption" value={field}>
+                            {field}
+                        </option>
+                        <span class="slds-p-horizontal_x-small" key={item}>
+                                <a onclick={processMe} name={item}>{item}</a>
+                            </span>
+                    </template>
+
+                    <span class="slds-p-horizontal_xxx-small">
+                            <a>...</a>
+                        </span>
+                    <span class="slds-p-horizontal_x-small">
+                            <a onclick={processMe} name={totalPages}>{totalPages}</a>
+                        </span>
+                    <lightning-button icon-name="utility:chevronright"
+                                      disabled={isCurrentPageNumberLast} onclick={onNext}></lightning-button>
+                    <lightning-button label="Last" icon-name="utility:right" icon-position="right"
+                                      disabled={isCurrentPageNumberLast} onclick={onLast}></lightning-button>
+                </div>
+            </template>
+        </template>
+    </div>
+
+</template>

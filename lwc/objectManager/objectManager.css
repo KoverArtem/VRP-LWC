@@ -1,0 +1,88 @@
+/**
+ * Created by Artem Koverchik on 2/25/2020.
+ */
+
+.cards {
+    max-height: 700px;
+}
+
+.card-icon {
+    float: right;
+    cursor: pointer;
+}
+
+.card {
+    cursor: pointer;
+}
+
+.fields {
+    height: 300px;
+    max-height: 300px;
+}
+
+.disabledCard {
+    background: gainsboro;
+    cursor: no-drop;
+}
+
+.column-header {
+    font-size: 32px;
+}
+
+.field:not(:first-child) {
+    margin-top: 10px;
+}
+
+.field-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+}
+
+.field-item:not(:first-child) {
+    margin-top: 10px;
+}
+
+.field-item:not(:last-child) {
+    border-bottom: 1px solid gainsboro;
+}
+
+.field-item-percentage {
+    margin: 7px 10px 0 0;
+}
+
+.createdData {
+    max-height: 700px;
+}
+
+.scrollbar {
+    overflow-y: auto;
+}
+
+.force-overflow {
+    min-height: 450px;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 10px;
+    margin-right: 10px;
+   /* background-color: #F5F5F5;*/
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    /*background: rgba(0,0,0,0.1);*/
+    border: 1px solid #ccc;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    /*background: linear-gradient(left, #fff, #e4e4e4);*/
+    background: rgba(0,0,0,0.1);
+    border: 1px solid #aaa;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+}
+
